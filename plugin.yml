@@ -1,0 +1,11 @@
+name: RainMan
+main: me.abcric.bukkit.rainman.RainMan
+version: 1.0
+author: ABCRic
+commands:
+   rainman:
+      description: This is the global plugin command.
+      usage: /rainman <command>
+permissions:
+    rainman.admin:
+        description: Allows the user to control the plugin
