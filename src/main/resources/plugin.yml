@@ -1,14 +1,14 @@
 name: RainManNG
-main: me.abcric.bukkit.rainman.RainMan
+main: de.rangun.RainManNG.RainManNG
 version: 1.1
 api-version: 1.18
 authors: 
    - ABCRic
    - Velnias75
 commands:
-   rainman:
+   rainmanng:
       description: This is the global plugin command.
-      usage: /rainman <command>
+      usage: /rainmanng <command>
 permissions:
-    rainman.admin:
+    rainmanng.admin:
         description: Allows the user to control the plugin
