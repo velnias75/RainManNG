@@ -1,6 +1,12 @@
 # Whether it should rain/snow at all
 weather-enabled: true
+
 # Whenever the game would normally make it start raining/snowing, the chance it actually does (Between 0 and 1)
+# Good value to start with: 0.1
 rain-chance: 1
+
 # Factor to multiply the rain/snow duration when it starts, e.g. 0.5 for half of the normal length
 rain-length-scale: 1
+
+# Enable debugging messages
+debug: false

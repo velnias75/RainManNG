@@ -2,6 +2,7 @@ package de.rangun.RainManNG.commands;
 
 import java.util.ArrayList;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -28,10 +29,19 @@ public class WeatherCommand extends AbstractCommand {
 		}
 
 		if (plugin.isWeatherEnabled()) {
-			plugin.temporaryDisableWeather(true);
-			plugin.getLogger().info("Temporary disabling plugin for weather forced to change.");
+
+			plugin.temporaryDisablePlugin(true);
+
+			if (plugin.isDebugEnabled()) {
+				plugin.getLogger().info("Temporary disabling plugin for weather forced to change.");
+			}
+
+			return plugin.getServer().dispatchCommand(sender, "minecraft:weather " + String.join(" ", args));
+
+		} else {
+			sender.sendMessage(ChatColor.RED + "Weather is disabled on this server!");
 		}
 
-		return plugin.getServer().dispatchCommand(sender, "minecraft:weather " + String.join(" ", args));
+		return true;
 	}
 }

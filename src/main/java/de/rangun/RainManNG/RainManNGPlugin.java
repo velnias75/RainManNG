@@ -2,6 +2,8 @@ package de.rangun.RainManNG;
 
 import java.util.Random;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,13 +20,13 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import de.rangun.RainManNG.commands.RainManNGCommand;
 import de.rangun.RainManNG.commands.WeatherCommand;
 
-@Plugin(name = "RainManNG", version = "1.1-SNAPSHOT")
+@Plugin(name = "RainManNG", version = "1.1")
 @Description(value = "Bukkit plugin for controlling rain frequency and length.")
 @Website(value = "https://github.com/velnias75/RainManNG")
 @ApiVersion(Target.v1_15)
 @Author(value = "ABCRic")
 @Author(value = "Velnias75")
-@Command(name = "rainmanng", desc = "This is the global plugin command.", usage = "/rainmanng <command>", permission = "rainmanng.admin")
+@Command(name = "rainmanng", desc = "Set, show, save or reload plugin config.", usage = "/rainmanng (disable-weather|reload|save|show-config|rain-chance [<value>]|rain-length-scale [<value>])", permission = "rainmanng.admin")
 @Command(name = "weather", desc = "Sets the weather.", usage = "/weather (clear|rain|thunder) [<duration>]", permission = "rainmanng.weather")
 public class RainManNGPlugin extends JavaPlugin implements Listener {
 
@@ -34,7 +36,8 @@ public class RainManNGPlugin extends JavaPlugin implements Listener {
 	private double rainChance;
 	private double lengthScale;
 	private boolean weatherEnabled;
-	private boolean tmpWeatherDisabled = false;
+	private boolean tmpPluginDisabled = false;
+	private boolean debug = false;
 
 	@Override
 	public void onEnable() {
@@ -60,37 +63,80 @@ public class RainManNGPlugin extends JavaPlugin implements Listener {
 		weatherEnabled = config.getBoolean("weather-enabled", true);
 		rainChance = config.getDouble("rain-chance", 1);
 		lengthScale = config.getDouble("rain-length-scale", 1);
+		debug = config.getBoolean("debug", false);
+
+		if (rainChance < 0.0d || rainChance > 1.0d) {
+			sendInvalidRainChance(null, lengthScale);
+			rainChance = 1.0d;
+		}
+	}
+
+	public boolean isDebugEnabled() {
+		return debug;
 	}
 
 	public boolean isWeatherEnabled() {
 		return weatherEnabled;
 	}
 
-	public void temporaryDisableWeather(boolean b) {
-		tmpWeatherDisabled = b;
+	public void setWeatherEnabled(boolean b) {
+		weatherEnabled = b;
+	}
+
+	public void temporaryDisablePlugin(boolean b) {
+		tmpPluginDisabled = b;
+	}
+
+	public double getRainChance() {
+		return rainChance;
+	}
+
+	public void setRainChance(double rc) {
+		rainChance = rc;
+	}
+
+	public double getRainLengthScale() {
+		return lengthScale;
+	}
+
+	public void setRainLengthScale(double rls) {
+		lengthScale = rls;
+	}
+
+	public void sendInvalidRainChance(final CommandSender sender, final double value) {
+
+		final String str = "rain-chance must be between 0.0 and 1.0 (" + value + ")";
+
+		if (sender != null) {
+			sender.sendMessage(ChatColor.RED + str);
+		} else {
+			getLogger().warning(str + ". Setting it to 1.0.");
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onWeatherChange(WeatherChangeEvent event) {
 
-		if (!tmpWeatherDisabled) {
-
-			tmpWeatherDisabled = false;
+		if (!tmpPluginDisabled) {
 
 			// if it's gonna rain
 			if (event.toWeatherState()) {
 
 				if (!weatherEnabled || random.nextDouble() > rainChance || lengthScale <= 0d) {
 					event.setCancelled(true);
+
+					if (isDebugEnabled()) {
+						getLogger().info("Prevented weather from raining (rain chance: " + rainChance + ")");
+					}
+
+					tmpPluginDisabled = false;
 					return;
 				}
 
 				event.getWorld().setWeatherDuration((int) (event.getWorld().getWeatherDuration() * lengthScale));
 			}
-
-		} else if (weatherEnabled) {
-			getLogger().info("Weather change forced.");
 		}
 
+		tmpPluginDisabled = false;
 	}
 }

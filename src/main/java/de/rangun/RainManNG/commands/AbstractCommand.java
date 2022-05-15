@@ -22,24 +22,23 @@ abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 		this.cmd_args = cmd_args;
 	}
 
-	@SuppressWarnings("serial")
 	@Override
-	final public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 
-		if (args.length > 0 && args[0].length() > 0) {
+		if (args.length > 0 && args.length < 2 && args[0].length() > 0) {
+
+			List<String> sugg = new ArrayList<>(cmd_args.size());
 
 			for (String string : cmd_args) {
 				if (StringUtil.startsWithIgnoreCase(string, args[0])) {
-					return new ArrayList<String>() {
-						{
-							add(string);
-						}
-					};
+					sugg.add(string);
 				}
 			}
+
+			return sugg;
 		}
 
-		return cmd_args;
+		return args.length >= 2 ? new ArrayList<>() : cmd_args;
 	}
 
 }
