@@ -48,7 +48,7 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 import de.rangun.RainManNG.commands.RainManNGCommand;
 import de.rangun.RainManNG.commands.WeatherCommand;
 
-@Plugin(name = "RainManNG", version = "1.2")
+@Plugin(name = "RainManNG", version = "1.3-SNAPSHOT")
 @Description(value = "Bukkit plugin for controlling rain frequency and length.")
 @Website(value = "https://github.com/velnias75/RainManNG")
 @ApiVersion(Target.v1_15)
