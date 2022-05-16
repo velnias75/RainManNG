@@ -18,3 +18,7 @@ Originally based on [ABCRic's RainMan](https://dev.bukkit.org/projects/rainman).
 
 ## Configuration
 See [here](src/main/resources/config.yml).
+
+---
+
+![](https://bstats.org/signatures/bukkit/RainManNG.svg)
