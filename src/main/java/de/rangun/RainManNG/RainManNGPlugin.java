@@ -21,6 +21,8 @@ package de.rangun.RainManNG;
 
 import java.util.Random;
 
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -71,6 +73,10 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 		saveDefaultConfig();
 		loadConfigValues();
+
+		final int pluginId = 15206;
+		/*final Metrics metrics = */new Metrics(this, pluginId);
+		//metrics.addCustomChart(new SimplePie("chart_id", () -> "My value"));
 
 		getLogger().info("Enabled.");
 	}
