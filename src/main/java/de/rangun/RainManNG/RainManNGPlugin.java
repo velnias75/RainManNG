@@ -19,16 +19,23 @@
 
 package de.rangun.RainManNG;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.command.Command;
 import org.bukkit.plugin.java.annotation.plugin.ApiVersion;
@@ -49,6 +56,7 @@ import de.rangun.RainManNG.commands.WeatherCommand;
 @Author(value = "Velnias75")
 @Command(name = "rainmanng", desc = "Set, show, save or reload plugin config.", usage = "/rainmanng (disable-weather|reload|save|show-config|rain-chance [<value>]|rain-length-scale [<value>])", permission = "rainmanng.admin")
 @Command(name = "weather", desc = "Sets the weather.", usage = "/weather (clear|rain|thunder) [<duration>]", permission = "rainmanng.weather")
+//@Permission(name = "rainmanng.sendweatherreport", desc = "Displays whether raining was prevented or not to the user's client", defaultValue = PermissionDefault.FALSE)
 public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 	private final static Random random = new Random();
@@ -75,8 +83,16 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 		loadConfigValues();
 
 		final int pluginId = 15206;
-		/*final Metrics metrics = */new Metrics(this, pluginId);
-		//metrics.addCustomChart(new SimplePie("chart_id", () -> "My value"));
+		new Metrics(this, pluginId);
+
+		final PluginManager pm = getServer().getPluginManager();
+		final Set<Permission> permissions = pm.getPermissions();
+		final Permission perm = new Permission("rainmanng.sendweatherreport",
+				"Displays whether raining was prevented or not to the user's client", PermissionDefault.FALSE);
+
+		if (!permissions.contains(perm)) {
+			pm.addPermission(perm);
+		}
 
 		getLogger().info("Enabled.");
 	}
@@ -142,6 +158,15 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onWeatherChange(WeatherChangeEvent event) {
 
+		final List<Player> lp = new ArrayList<Player>();
+
+		for (Player p : Bukkit.getOnlinePlayers()) {
+
+			if (p.hasPermission("rainmanng.sendweatherreport")) {
+				lp.add(p);
+			}
+		}
+
 		if (!tmpPluginDisabled) {
 
 			// if it's gonna rain
@@ -150,12 +175,31 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 				if (!weatherEnabled || random.nextDouble() > rainChance || lengthScale <= 0d) {
 					event.setCancelled(true);
 
+					final String prevented = "Prevented weather from raining (rain chance: " + rainChance + ")";
+
 					if (isDebugEnabled()) {
-						getLogger().info("Prevented weather from raining (rain chance: " + rainChance + ")");
+						getLogger().info(prevented);
+					}
+
+					for (Player p : lp) {
+						p.sendMessage(
+								"" + ChatColor.GRAY + ChatColor.ITALIC + "[" + getName() + ": " + prevented + "]");
 					}
 
 					tmpPluginDisabled = false;
 					return;
+
+				} else if (weatherEnabled) {
+
+					final String raining = "Allowed weather to rain (rain chance: " + rainChance + ")";
+
+					if (isDebugEnabled()) {
+						getLogger().info(raining);
+					}
+
+					for (Player p : lp) {
+						p.sendMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "[" + getName() + ": " + raining + "]");
+					}
 				}
 
 				event.getWorld().setWeatherDuration((int) (event.getWorld().getWeatherDuration() * lengthScale));
