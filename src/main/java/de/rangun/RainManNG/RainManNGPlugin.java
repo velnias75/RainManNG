@@ -50,7 +50,7 @@ import de.rangun.RainManNG.commands.WeatherCommand;
 
 @Plugin(name = "RainManNG", version = "1.3-SNAPSHOT")
 @Description(value = "Bukkit plugin for controlling rain frequency and length.")
-@Website(value = "https://github.com/velnias75/RainManNG")
+@Website(value = "https://www.spigotmc.org/resources/rainmanng.102026/")
 @ApiVersion(Target.v1_15)
 @Author(value = "ABCRic")
 @Author(value = "Velnias75")
