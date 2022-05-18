@@ -1,0 +1,25 @@
+plugins {
+    id 'java' 
+}
+
+apply plugin: 'java'
+
+archivesBaseName = 'RainManNG-raintest'
+
+repositories {
+	mavenLocal()
+
+	maven { url = uri('https://papermc.io/repo/repository/maven-public/') }
+	maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+	maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+	
+	mavenCentral()
+}
+
+dependencies {
+
+	compileOnly "org.bukkit:bukkit:${project.bukkit_version}"
+	compileOnly "org.spigotmc:plugin-annotations:${project.plugins_annotation_version}"
+	annotationProcessor "org.spigotmc:plugin-annotations:${project.plugins_annotation_version}"
+
+}

@@ -1,6 +1,9 @@
 # Whether it should rain/snow at all
 weather-enabled: true
 
+# Should it rain if there is no online player? (true) or not? (false)
+offline-weather: false
+
 # Whenever the game would normally make it start raining/snowing, the chance it actually does (Between 0 and 1)
 # Good value to start with: 0.1
 rain-chance: 1

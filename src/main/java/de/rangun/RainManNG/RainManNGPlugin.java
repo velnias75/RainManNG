@@ -20,6 +20,7 @@
 package de.rangun.RainManNG;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -66,6 +67,7 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 	private double lengthScale;
 	private boolean weatherEnabled;
 	private boolean tmpPluginDisabled = false;
+	private boolean offlineWeather = false;
 	private boolean debug = false;
 
 	@Override
@@ -102,6 +104,7 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 		FileConfiguration config = getConfig();
 
 		weatherEnabled = config.getBoolean("weather-enabled", true);
+		offlineWeather = config.getBoolean("offline-weather", false);
 		rainChance = config.getDouble("rain-chance", 1);
 		lengthScale = config.getDouble("rain-length-scale", 1);
 		debug = config.getBoolean("debug", false);
@@ -122,6 +125,14 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 	public void setWeatherEnabled(boolean b) {
 		weatherEnabled = b;
+	}
+
+	public boolean hasOfflineWeather() {
+		return offlineWeather;
+	}
+
+	public void setOfflineWeather(boolean b) {
+		offlineWeather = b;
 	}
 
 	public void temporaryDisablePlugin(boolean b) {
@@ -159,15 +170,16 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 	public void onWeatherChange(WeatherChangeEvent event) {
 
 		final List<Player> lp = new ArrayList<Player>();
+		final Collection<? extends Player> op = Bukkit.getOnlinePlayers();
 
-		for (Player p : Bukkit.getOnlinePlayers()) {
+		for (Player p : op) {
 
 			if (p.hasPermission("rainmanng.sendweatherreport")) {
 				lp.add(p);
 			}
 		}
 
-		if (!tmpPluginDisabled) {
+		if (!isOfflineWeatherOrTemporaryDisabled(op.size() != 0)) {
 
 			// if it's gonna rain
 			if (event.toWeatherState()) {
@@ -207,5 +219,16 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 		}
 
 		tmpPluginDisabled = false;
+	}
+
+	private boolean isOfflineWeatherOrTemporaryDisabled(final boolean online) {
+
+		final boolean ow = (offlineWeather && !online);
+
+		if (isDebugEnabled() && !tmpPluginDisabled && isWeatherEnabled() && ow) {
+			getLogger().info("Allowing weather to change due to nobody is online.");
+		}
+
+		return tmpPluginDisabled || ow;
 	}
 }
