@@ -10,8 +10,10 @@ Originally based on [ABCRic's RainMan](https://dev.bukkit.org/projects/rainman).
 | --- | --- | --- |
 | /rainmanng reload |	Reloads config | rainmanng.admin |
 | /rainmanng disable-weather | Disables weather at all | rainmanng.admin |
+| /rainmanng offline-weather | Allow weather if nobody is online | rainmanng.admin |
 | /rainmanng save | Saves the config | rainmanng.admin |
 | /rainmanng show-config | Shows the config | rainmanng.admin |
+| /rainmanng get-weather | Gets the current weather | rainmanng.admin |
 | /rainmanng rain-chance [\<value\>] | Shows/sets the rain chance | rainmanng.admin |
 | /rainmanng rain-length-scale [\<value\>] | Shows/sets the rain duration | rainmanng.admin |
 | /weather (clear\|rain\|thunder) [\<duration\>] |	Sets the weather | rainmanng.weather |
