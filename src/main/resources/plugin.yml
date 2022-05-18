@@ -1,0 +1,23 @@
+main: de.rangun.RainManNG.RainManNGPlugin
+name: RainManNG
+version: '@version@'
+description: Bukkit plugin for controlling rain frequency and length.
+authors:
+- ABCRic
+- Velnias75
+website: https://www.spigotmc.org/resources/rainmanng.102026/
+commands:
+  rainmanng:
+    description: Set, show, save or reload plugin config.
+    permission: rainmanng.admin
+    usage: /rainmanng (disable-weather|reload|save|show-config|rain-chance [<value>]|rain-length-scale
+      [<value>])
+  weather:
+    description: Sets the weather.
+    permission: rainmanng.weather
+    usage: /weather (clear|rain|thunder) [<duration>]
+  permission:
+    rainmanng.sendweatherreport:
+        description: Displays whether raining was prevented or not to the user's client
+        default: false
+api-version: '1.15'

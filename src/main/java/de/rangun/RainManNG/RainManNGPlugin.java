@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -34,30 +33,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.annotation.command.Command;
-import org.bukkit.plugin.java.annotation.plugin.ApiVersion;
-import org.bukkit.plugin.java.annotation.plugin.ApiVersion.Target;
-import org.bukkit.plugin.java.annotation.plugin.Description;
-import org.bukkit.plugin.java.annotation.plugin.Plugin;
-import org.bukkit.plugin.java.annotation.plugin.Website;
-import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import de.rangun.RainManNG.commands.RainManNGCommand;
 import de.rangun.RainManNG.commands.WeatherCommand;
 
-@Plugin(name = "RainManNG", version = "1.3-SNAPSHOT")
-@Description(value = "Bukkit plugin for controlling rain frequency and length.")
-@Website(value = "https://www.spigotmc.org/resources/rainmanng.102026/")
-@ApiVersion(Target.v1_15)
-@Author(value = "ABCRic")
-@Author(value = "Velnias75")
-@Command(name = "rainmanng", desc = "Set, show, save or reload plugin config.", usage = "/rainmanng (disable-weather|reload|save|show-config|rain-chance [<value>]|rain-length-scale [<value>])", permission = "rainmanng.admin")
-@Command(name = "weather", desc = "Sets the weather.", usage = "/weather (clear|rain|thunder) [<duration>]", permission = "rainmanng.weather")
-//@Permission(name = "rainmanng.sendweatherreport", desc = "Displays whether raining was prevented or not to the user's client", defaultValue = PermissionDefault.FALSE)
 public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 	private final static Random random = new Random();
@@ -86,15 +66,6 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 		final int pluginId = 15206;
 		new Metrics(this, pluginId);
-
-		final PluginManager pm = getServer().getPluginManager();
-		final Set<Permission> permissions = pm.getPermissions();
-		final Permission perm = new Permission("rainmanng.sendweatherreport",
-				"Displays whether raining was prevented or not to the user's client", PermissionDefault.FALSE);
-
-		if (!permissions.contains(perm)) {
-			pm.addPermission(perm);
-		}
 
 		getLogger().info("Enabled.");
 	}

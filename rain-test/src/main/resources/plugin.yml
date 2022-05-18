@@ -1,0 +1,9 @@
+main: de.rangun.RainManNG.raintest.RainTestPlugin
+name: RainManNG-raintest
+version: '@version@'
+description: Helper plugin for RainManNG development. DO NOT USE!
+author: Velnias75
+website: https://github.com/velnias75/RainManNG
+loadbefore:
+- RainManNG
+api-version: '1.15'
