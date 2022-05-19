@@ -10,7 +10,7 @@ commands:
   rainmanng:
     description: Set, show, save or reload plugin config.
     permission: rainmanng.admin
-    usage: /rainmanng (disable-weather|reload|save|show-config|rain-chance [<value>]|rain-length-scale
+    usage: /rainmanng (disable-weather|offline-weather|reload|save|show-config|get-weather|rain-chance [<value>]|rain-length-scale
       [<value>])
   weather:
     description: Sets the weather.

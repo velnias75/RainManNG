@@ -23,17 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import de.rangun.RainManNG.RainManNGPlugin;
+import de.rangun.RainManNG.commands.subcommands.RainManNGSubcommandFactory;
 
 public final class RainManNGCommand extends AbstractCommand {
 
 	@SuppressWarnings("serial")
 	public RainManNGCommand(final RainManNGPlugin plugin) {
+
 		super(plugin, new ArrayList<String>() {
 			{
 				add("disable-weather");
@@ -49,157 +49,15 @@ public final class RainManNGCommand extends AbstractCommand {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(final CommandSender sender, final Command command, final String label,
+			final String[] args) {
 
 		if (args.length >= 1 && sender.hasPermission("rainmanng.admin")) {
 
-			// /rainmanng reload
-			if ("reload".equalsIgnoreCase(args[0])) {
-
-				plugin.reloadConfig();
-				plugin.loadConfigValues();
-				plugin.temporaryDisablePlugin(false);
-
-				sender.sendMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "[" + plugin.getDescription().getName()
-						+ ": config reloaded]");
-
-				return true;
-
-			} else if ("get-weather".equalsIgnoreCase(args[0])) {
-
-				for (World w : plugin.getServer().getWorlds()) {
-
-					if (w.hasStorm()) {
-						sender.sendMessage(ChatColor.GRAY + "[" + plugin.getName() + ": It is raining at the moment.]");
-						return true;
-					}
-				}
-
-				sender.sendMessage(ChatColor.GRAY + "[" + plugin.getName() + ": It is " + ChatColor.BOLD + "not"
-						+ ChatColor.RESET + ChatColor.GRAY + " raining.]");
-
-				return true;
-
-			} else if ("save".equalsIgnoreCase(args[0])) {
-
-				final FileConfiguration config = plugin.getConfig();
-
-				config.set("weather-enabled", plugin.isWeatherEnabled());
-				config.set("rain-chance", plugin.getRainChance());
-				config.set("rain-length-scale", plugin.getRainLengthScale());
-				config.set("offline-weather", plugin.hasOfflineWeather());
-
-				plugin.saveConfig();
-
-				sender.sendMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "[" + plugin.getDescription().getName()
-						+ ": config saved]");
-
-				return true;
-
-			} else if ("rain-chance".equalsIgnoreCase(args[0])) {
-
-				if (args.length > 1) {
-
-					double rc = plugin.getRainChance();
-
-					try {
-
-						rc = Double.parseDouble(args[1]);
-
-					} catch (NumberFormatException ex) {
-						sendInvalidValue(sender, args[1]);
-					}
-
-					if (rc < 0.0d || rc > 1.0d) {
-						plugin.sendInvalidRainChance(sender, rc);
-					} else {
-						plugin.setRainChance(rc);
-					}
-				}
-
-				sendValue(sender, "rain-chance", plugin.getRainChance());
-
-				return true;
-
-			} else if ("rain-length-scale".equalsIgnoreCase(args[0])) {
-
-				if (args.length > 1) {
-
-					double rls = plugin.getRainLengthScale();
-
-					try {
-
-						rls = Double.parseDouble(args[1]);
-
-					} catch (NumberFormatException ex) {
-						sendInvalidValue(sender, args[1]);
-					}
-
-					plugin.setRainLengthScale(rls);
-				}
-
-				sendValue(sender, "rain-length-scale", plugin.getRainLengthScale());
-
-				return true;
-
-			} else if ("offline-weather".equalsIgnoreCase(args[0])) {
-
-				if (args.length > 1) {
-
-					boolean offlineWeather = !plugin.hasOfflineWeather();
-
-					try {
-
-						if ("true".equals(args[1]) || "false".equals(args[1])) {
-							offlineWeather = Boolean.parseBoolean(args[1]);
-						} else {
-							sendInvalidValue(sender, args[1]);
-						}
-
-					} catch (NumberFormatException ex) {
-						sendInvalidValue(sender, args[1]);
-					}
-
-					plugin.setOfflineWeather(offlineWeather);
-				}
-
-				sendOfflineWeather(sender);
-
-				return true;
-
-			} else if ("disable-weather".equalsIgnoreCase(args[0])) {
-
-				if (args.length > 1) {
-
-					boolean disabled = !plugin.isWeatherEnabled();
-
-					try {
-
-						if ("true".equals(args[1]) || "false".equals(args[1])) {
-							disabled = Boolean.parseBoolean(args[1]);
-						} else {
-							sendInvalidValue(sender, args[1]);
-						}
-
-					} catch (NumberFormatException ex) {
-						sendInvalidValue(sender, args[1]);
-					}
-
-					plugin.setWeatherEnabled(!disabled);
-				}
-
-				sendWeatherEnabled(sender);
-
-				return true;
-
-			} else if ("show-config".equalsIgnoreCase(args[0])) {
-
-				sendWeatherEnabled(sender);
-				sendOfflineWeather(sender);
-				sendValue(sender, "rain-chance", plugin.getRainChance());
-				sendValue(sender, "rain-length-scale", plugin.getRainLengthScale());
-
-				return true;
+			try {
+				return RainManNGSubcommandFactory.getInstance().createSubcommand(plugin, args).execute(sender);
+			} catch (IllegalArgumentException e) {
+				return false;
 			}
 
 		} else if (!sender.hasPermission("rainmanng.admin")) {
@@ -210,28 +68,10 @@ public final class RainManNGCommand extends AbstractCommand {
 		return false;
 	}
 
-	private void sendInvalidValue(final CommandSender sender, final String value) {
-		sender.sendMessage(ChatColor.RED + "Invalid value: \"" + value + "\"");
-	}
-
-	private void sendValue(final CommandSender sender, final String name, final double value) {
-		sender.sendMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "[" + plugin.getDescription().getName() + ": "
-				+ name + " = " + value + "]");
-	}
-
-	private void sendWeatherEnabled(final CommandSender sender) {
-		sender.sendMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "[" + plugin.getDescription().getName()
-				+ ": weather-enabled = " + plugin.isWeatherEnabled() + "]");
-	}
-
-	private void sendOfflineWeather(final CommandSender sender) {
-		sender.sendMessage("" + ChatColor.GRAY + ChatColor.ITALIC + "[" + plugin.getDescription().getName()
-				+ ": offline-weather = " + plugin.hasOfflineWeather() + "]");
-	}
-
 	@SuppressWarnings("serial")
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias,
+			final String[] args) {
 
 		if (args.length >= 1 && args.length < 3
 				&& ("disable-weather".equalsIgnoreCase(args[0]) || ("offline-weather".equalsIgnoreCase(args[0])))) {
