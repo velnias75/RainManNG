@@ -31,21 +31,8 @@ import de.rangun.RainManNG.commands.subcommands.RainManNGSubcommandFactory;
 
 public final class RainManNGCommand extends AbstractCommand {
 
-	@SuppressWarnings("serial")
 	public RainManNGCommand(final RainManNGPlugin plugin) {
-
-		super(plugin, new ArrayList<String>() {
-			{
-				add("disable-weather");
-				add("offline-weather");
-				add("reload");
-				add("save");
-				add("show-config");
-				add("rain-chance");
-				add("rain-length-scale");
-				add("get-weather");
-			}
-		});
+		super(plugin, RainManNGSubcommandFactory.getInstance().getSubcommands());
 	}
 
 	@Override
@@ -68,13 +55,24 @@ public final class RainManNGCommand extends AbstractCommand {
 		return false;
 	}
 
+	private boolean isBooleanSubcommand(final String[] args) {
+
+		boolean b = false;
+
+		for (String sc : RainManNGSubcommandFactory.getInstance().getSubcommands()) {
+			b |= (sc.equalsIgnoreCase(args[0])
+					&& RainManNGSubcommandFactory.getInstance().createSubcommand(plugin, sc, args).isBooleanCommand());
+		}
+
+		return b;
+	}
+
 	@SuppressWarnings("serial")
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias,
 			final String[] args) {
 
-		if (args.length >= 1 && args.length < 3
-				&& ("disable-weather".equalsIgnoreCase(args[0]) || ("offline-weather".equalsIgnoreCase(args[0])))) {
+		if (args.length >= 1 && args.length < 3 && isBooleanSubcommand(args)) {
 
 			return new ArrayList<String>() {
 				{

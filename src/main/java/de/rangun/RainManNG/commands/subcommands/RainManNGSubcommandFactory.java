@@ -19,6 +19,9 @@
 
 package de.rangun.RainManNG.commands.subcommands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.rangun.RainManNG.RainManNGPlugin;
 
 /**
@@ -26,6 +29,20 @@ import de.rangun.RainManNG.RainManNGPlugin;
  *
  */
 public final class RainManNGSubcommandFactory {
+
+	@SuppressWarnings("serial")
+	private final static List<String> SUBCOMMANDS = new ArrayList<String>() {
+		{
+			add("disable-weather");
+			add("offline-weather");
+			add("reload");
+			add("save");
+			add("show-config");
+			add("rain-chance");
+			add("rain-length-scale");
+			add("get-weather");
+		}
+	};
 
 	private static RainManNGSubcommandFactory instance = null;
 
@@ -41,26 +58,34 @@ public final class RainManNGSubcommandFactory {
 		return instance;
 	}
 
-	public IRainManNGSubcommand createSubcommand(final RainManNGPlugin plugin, final String[] args) {
+	public List<String> getSubcommands() {
+		return SUBCOMMANDS;
+	}
 
-		if ("reload".equalsIgnoreCase(args[0])) {
+	public IRainManNGSubcommand createSubcommand(final RainManNGPlugin plugin, final String[] args) {
+		return createSubcommand(plugin, args[0], args);
+	}
+
+	public IRainManNGSubcommand createSubcommand(final RainManNGPlugin plugin, final String sc, final String[] args) {
+
+		if (SUBCOMMANDS.get(2).equalsIgnoreCase(sc)) {
 			return new ReloadSubcommand(plugin, args);
-		} else if ("get-weather".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(7).equalsIgnoreCase(sc)) {
 			return new GetWeatherSubCommand(plugin, args);
-		} else if ("save".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(3).equalsIgnoreCase(sc)) {
 			return new SaveSubcommand(plugin, args);
-		} else if ("rain-chance".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(5).equalsIgnoreCase(sc)) {
 			return new RainChanceSubcommand(plugin, args);
-		} else if ("rain-length-scale".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(6).equalsIgnoreCase(sc)) {
 			return new RainLengthScaleSubcommand(plugin, args);
-		} else if ("offline-weather".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(1).equalsIgnoreCase(sc)) {
 			return new OfflineWeatherSubcommand(plugin, args);
-		} else if ("disable-weather".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(0).equalsIgnoreCase(sc)) {
 			return new DisableWeatherSubcommand(plugin, args);
-		} else if ("show-config".equalsIgnoreCase(args[0])) {
+		} else if (SUBCOMMANDS.get(4).equalsIgnoreCase(sc)) {
 			return new ShowConfigSubcommand(plugin, args);
 		}
 
-		throw new IllegalArgumentException("Sub command \"" + args[0] + "\" not implemented.");
+		throw new IllegalArgumentException("Sub command \"" + sc + "\" not implemented.");
 	}
 }

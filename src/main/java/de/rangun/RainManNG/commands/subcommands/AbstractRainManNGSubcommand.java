@@ -49,6 +49,11 @@ abstract class AbstractRainManNGSubcommand implements IRainManNGSubcommand {
 		return true;
 	}
 
+	@Override
+	public boolean isBooleanCommand() {
+		return false;
+	}
+
 	abstract protected void doCommand(final CommandSender sender);
 
 	protected void sendInvalidValue(final CommandSender sender, final String value) {

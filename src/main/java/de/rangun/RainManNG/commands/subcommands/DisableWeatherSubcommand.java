@@ -57,4 +57,9 @@ final class DisableWeatherSubcommand extends AbstractRainManNGParameterSubcomman
 	protected void doWithoutParameter(CommandSender sender) {
 		sendWeatherEnabled(sender);
 	}
+
+	@Override
+	public boolean isBooleanCommand() {
+		return true;
+	}
 }

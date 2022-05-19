@@ -27,4 +27,6 @@ import org.bukkit.command.CommandSender;
  */
 public interface IRainManNGSubcommand {
 	boolean execute(CommandSender sender);
+
+	boolean isBooleanCommand();
 }
