@@ -16,8 +16,8 @@ commands:
     description: Sets the weather.
     permission: rainmanng.weather
     usage: /weather (clear|rain|thunder) [<duration>]
-  permission:
-    rainmanng.sendweatherreport:
-        description: Displays whether raining was prevented or not to the user's client
-        default: false
+permissions:
+  rainmanng.sendweatherreport:
+      description: Displays whether raining was prevented or not to the user's client
+      default: false
 api-version: '1.15'
