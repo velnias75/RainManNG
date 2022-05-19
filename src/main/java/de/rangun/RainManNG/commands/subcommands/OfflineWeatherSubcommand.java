@@ -27,34 +27,34 @@ import de.rangun.RainManNG.RainManNGPlugin;
  * @author heiko
  *
  */
-final class OfflineWeatherSubcommand extends AbstractRainManNGSubcommand {
+final class OfflineWeatherSubcommand extends AbstractRainManNGParameterSubcommand {
 
 	protected OfflineWeatherSubcommand(final RainManNGPlugin plugin, final String[] args) {
 		super(plugin, args);
 	}
 
 	@Override
-	protected void doCommand(final CommandSender sender) {
+	protected void doWithParameter(CommandSender sender) {
 
-		if (args.length > 1) {
+		boolean offlineWeather = !plugin.hasOfflineWeather();
 
-			boolean offlineWeather = !plugin.hasOfflineWeather();
+		try {
 
-			try {
-
-				if ("true".equals(args[1]) || "false".equals(args[1])) {
-					offlineWeather = Boolean.parseBoolean(args[1]);
-				} else {
-					sendInvalidValue(sender, args[1]);
-				}
-
-			} catch (NumberFormatException ex) {
+			if ("true".equals(args[1]) || "false".equals(args[1])) {
+				offlineWeather = Boolean.parseBoolean(args[1]);
+			} else {
 				sendInvalidValue(sender, args[1]);
 			}
 
-			plugin.setOfflineWeather(offlineWeather);
+		} catch (NumberFormatException ex) {
+			sendInvalidValue(sender, args[1]);
 		}
 
+		plugin.setOfflineWeather(offlineWeather);
+	}
+
+	@Override
+	protected void doWithoutParameter(CommandSender sender) {
 		sendOfflineWeather(sender);
 	}
 }

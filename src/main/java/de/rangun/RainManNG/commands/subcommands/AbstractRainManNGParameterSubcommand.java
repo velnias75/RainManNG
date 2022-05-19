@@ -27,34 +27,24 @@ import de.rangun.RainManNG.RainManNGPlugin;
  * @author heiko
  *
  */
-final class DisableWeatherSubcommand extends AbstractRainManNGParameterSubcommand {
+abstract class AbstractRainManNGParameterSubcommand extends AbstractRainManNGSubcommand {
 
-	protected DisableWeatherSubcommand(final RainManNGPlugin plugin, final String[] args) {
+	protected AbstractRainManNGParameterSubcommand(RainManNGPlugin plugin, String[] args) {
 		super(plugin, args);
 	}
 
 	@Override
-	protected void doWithParameter(CommandSender sender) {
+	protected final void doCommand(CommandSender sender) {
 
-		boolean disabled = !plugin.isWeatherEnabled();
-
-		try {
-
-			if ("true".equals(args[1]) || "false".equals(args[1])) {
-				disabled = Boolean.parseBoolean(args[1]);
-			} else {
-				sendInvalidValue(sender, args[1]);
-			}
-
-		} catch (NumberFormatException ex) {
-			sendInvalidValue(sender, args[1]);
+		if (args.length > 1) {
+			doWithParameter(sender);
 		}
 
-		plugin.setWeatherEnabled(!disabled);
+		doWithoutParameter(sender);
 	}
 
-	@Override
-	protected void doWithoutParameter(CommandSender sender) {
-		sendWeatherEnabled(sender);
-	}
+	protected abstract void doWithParameter(final CommandSender sender);
+
+	protected abstract void doWithoutParameter(final CommandSender sender);
+
 }

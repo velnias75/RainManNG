@@ -27,31 +27,30 @@ import de.rangun.RainManNG.RainManNGPlugin;
  * @author heiko
  *
  */
-final class RainLengthScaleSubcommand extends AbstractRainManNGSubcommand {
+final class RainLengthScaleSubcommand extends AbstractRainManNGParameterSubcommand {
 
 	protected RainLengthScaleSubcommand(final RainManNGPlugin plugin, final String[] args) {
 		super(plugin, args);
 	}
 
 	@Override
-	protected void doCommand(final CommandSender sender) {
+	protected void doWithParameter(CommandSender sender) {
 
-		if (args.length > 1) {
+		double rls = plugin.getRainLengthScale();
 
-			double rls = plugin.getRainLengthScale();
+		try {
 
-			try {
+			rls = Double.parseDouble(args[1]);
 
-				rls = Double.parseDouble(args[1]);
-
-			} catch (NumberFormatException ex) {
-				sendInvalidValue(sender, args[1]);
-			}
-
-			plugin.setRainLengthScale(rls);
+		} catch (NumberFormatException ex) {
+			sendInvalidValue(sender, args[1]);
 		}
 
-		sendValue(sender, "rain-length-scale", plugin.getRainLengthScale());
+		plugin.setRainLengthScale(rls);
+	}
 
+	@Override
+	protected void doWithoutParameter(CommandSender sender) {
+		sendValue(sender, "rain-length-scale", plugin.getRainLengthScale());
 	}
 }

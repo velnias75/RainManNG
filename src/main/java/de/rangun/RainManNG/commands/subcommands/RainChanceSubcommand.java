@@ -27,34 +27,34 @@ import de.rangun.RainManNG.RainManNGPlugin;
  * @author heiko
  *
  */
-final class RainChanceSubcommand extends AbstractRainManNGSubcommand {
+final class RainChanceSubcommand extends AbstractRainManNGParameterSubcommand {
 
 	protected RainChanceSubcommand(final RainManNGPlugin plugin, final String[] args) {
 		super(plugin, args);
 	}
 
 	@Override
-	protected void doCommand(final CommandSender sender) {
+	protected void doWithParameter(final CommandSender sender) {
 
-		if (args.length > 1) {
+		double rc = plugin.getRainChance();
 
-			double rc = plugin.getRainChance();
+		try {
 
-			try {
+			rc = Double.parseDouble(args[1]);
 
-				rc = Double.parseDouble(args[1]);
-
-			} catch (NumberFormatException ex) {
-				sendInvalidValue(sender, args[1]);
-			}
-
-			if (rc < 0.0d || rc > 1.0d) {
-				plugin.sendInvalidRainChance(sender, rc);
-			} else {
-				plugin.setRainChance(rc);
-			}
+		} catch (NumberFormatException ex) {
+			sendInvalidValue(sender, args[1]);
 		}
 
+		if (rc < 0.0d || rc > 1.0d) {
+			plugin.sendInvalidRainChance(sender, rc);
+		} else {
+			plugin.setRainChance(rc);
+		}
+	}
+
+	@Override
+	protected void doWithoutParameter(final CommandSender sender) {
 		sendValue(sender, "rain-chance", plugin.getRainChance());
 	}
 }
