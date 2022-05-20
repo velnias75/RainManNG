@@ -54,7 +54,7 @@ final class OfflineWeatherSubcommand extends AbstractRainManNGParameterSubcomman
 	}
 
 	@Override
-	protected void doWithoutParameter(CommandSender sender) {
+	protected void sendResult(CommandSender sender) {
 		sendOfflineWeather(sender);
 	}
 

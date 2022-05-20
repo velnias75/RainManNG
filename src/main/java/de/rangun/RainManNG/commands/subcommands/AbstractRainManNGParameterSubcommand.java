@@ -40,11 +40,11 @@ abstract class AbstractRainManNGParameterSubcommand extends AbstractRainManNGSub
 			doWithParameter(sender);
 		}
 
-		doWithoutParameter(sender);
+		sendResult(sender);
 	}
 
 	protected abstract void doWithParameter(final CommandSender sender);
 
-	protected abstract void doWithoutParameter(final CommandSender sender);
+	protected abstract void sendResult(final CommandSender sender);
 
 }

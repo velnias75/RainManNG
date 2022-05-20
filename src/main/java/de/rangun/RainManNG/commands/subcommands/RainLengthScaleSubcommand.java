@@ -50,7 +50,7 @@ final class RainLengthScaleSubcommand extends AbstractRainManNGParameterSubcomma
 	}
 
 	@Override
-	protected void doWithoutParameter(CommandSender sender) {
+	protected void sendResult(CommandSender sender) {
 		sendValue(sender, "rain-length-scale", plugin.getRainLengthScale());
 	}
 }

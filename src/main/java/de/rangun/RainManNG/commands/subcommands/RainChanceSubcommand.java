@@ -54,7 +54,7 @@ final class RainChanceSubcommand extends AbstractRainManNGParameterSubcommand {
 	}
 
 	@Override
-	protected void doWithoutParameter(final CommandSender sender) {
+	protected void sendResult(final CommandSender sender) {
 		sendValue(sender, "rain-chance", plugin.getRainChance());
 	}
 }
