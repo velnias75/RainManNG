@@ -20,6 +20,12 @@ dependencies {
 	shadow(project(':spiget')) 
 }
 
+task submodulesUpdate(type:Exec) {
+  description 'Updates (and inits) git submodules'
+  commandLine 'git', 'submodule', 'update', '--init', '--recursive'
+  group 'Build Setup'
+}
+
 shadowJar {
 
 	archiveClassifier.set('')
@@ -30,6 +36,10 @@ shadowJar {
     exclude 'META-INF/**'
 
     minimize()
+}
+
+build {
+	dependsOn submodulesUpdate
 }
 
 assemble {
