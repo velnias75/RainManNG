@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CompletionException;
 
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -39,19 +38,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.rangun.RainManNG.commands.RainManNGCommand;
 import de.rangun.RainManNG.commands.WeatherCommand;
-import dev.derklaro.spiget.SpigetClient;
-import dev.derklaro.spiget.http.java8.Java8SpigetClient;
-import dev.derklaro.spiget.mapper.gson.GsonMapper;
-import dev.derklaro.spiget.model.Resource;
-import dev.derklaro.spiget.model.Version;
+import de.rangun.spiget.PluginClient;
 
 public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 	private final static Random random = new Random();
 
-	private final SpigetClient spigetClient = new Java8SpigetClient(GsonMapper.INSTANCE);
-
-	private List<String> joinMessages = new ArrayList<>(2);
+	private final PluginClient spigetClient = new PluginClient(102026, getDescription().getVersion(),
+			getDescription().getName(), getLogger());
 
 	// config values
 	private double rainChance;
@@ -88,42 +82,7 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 
 		getLogger().info("Enabled.");
 
-		try {
-
-			final int id = 102026;
-
-			final Version latestVersion = spigetClient.latestResourceVersion().resourceId(id).exec().join();
-			final Resource resourceDetails = spigetClient.resourceDetails().resourceId(id).exec().join();
-			final String currentVersion = getDescription().getVersion();
-
-			if (!currentVersion.endsWith("-SNAPSHOT") && !currentVersion.equals(latestVersion.name())) {
-
-				final String verMsg1 = "A newer version of " + getDescription().getName() + " is available: "
-						+ latestVersion.name();
-				final String verMsg2 = "Download: " + resourceDetails.file().externalUrl();
-
-				getLogger().warning(verMsg1);
-				getLogger().warning(verMsg2);
-
-				joinMessages.add(verMsg1);
-				joinMessages.add(verMsg2);
-
-			} else if (currentVersion.endsWith("-SNAPSHOT")) {
-
-				final String verMsg1 = "You are using a development version.";
-				final String verMsg2 = "Please report any issues here: "
-						+ resourceDetails.links().get("alternativeSupport");
-
-				getLogger().warning(verMsg1);
-				getLogger().warning(verMsg2);
-
-				joinMessages.add(verMsg1);
-				joinMessages.add(verMsg2);
-			}
-
-		} catch (CompletionException e) {
-			getLogger().warning("Couldn't retrieve latest version.");
-		}
+		spigetClient.checkVersion();
 
 		getServer().getPluginManager().registerEvents(new JoinListener(this), this);
 	}
@@ -262,6 +221,6 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 	}
 
 	List<String> getJoinMessages() {
-		return joinMessages;
+		return spigetClient.getJoinMessages();
 	}
 }

@@ -13,11 +13,11 @@ dependencies {
 	implementation "org.bstats:bstats-bukkit:${project.bstats_version}"
 	shadow "org.bstats:bstats-bukkit:${project.bstats_version}"
 	
-	implementation "dev.derklaro.spiget:http-java8:${project.spiget_version}"
-	shadow "dev.derklaro.spiget:http-java8:${project.spiget_version}"
+	implementation(project(path: ':spiget', configuration: 'shadow')) {
+		exclude group:'dev.derklaro.spiget'
+	}
 	
-	implementation "dev.derklaro.spiget:mapper-gson:${project.spiget_version}"
-	shadow "dev.derklaro.spiget:mapper-gson:${project.spiget_version}"
+	shadow(project(':spiget')) 
 }
 
 shadowJar {
@@ -25,17 +25,9 @@ shadowJar {
 	archiveClassifier.set('')
     
     relocate 'org.bstats', 'de.rangun.RainManNG.shadowed.org.bstats'
-    relocate 'dev.derklaro.spiget', 'de.rangun.RainManNG.shadowed.dev.derklaro.spiget'
+    relocate 'de.rangun.spiget', 'de.rangun.RainManNG.shadowed.de.rangun.spiget'
 
-    //Exclude META-INF entries of shaded deps
     exclude 'META-INF/**'
-    exclude '**/*.pdn'
-    exclude '**/*.bbmodel'
-    from('.') {
-        include 'LICENSE.md'
-		include 'NOTICE.txt'
-		include 'licenses/**'
-    }
 
     minimize()
 }
