@@ -38,7 +38,7 @@ shadowJar {
     minimize()
 }
 
-build {
+compileJava {
 	dependsOn submodulesUpdate
 }
 
