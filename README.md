@@ -21,6 +21,10 @@ Originally based on [ABCRic's RainMan](https://dev.bukkit.org/projects/rainman).
 ## Configuration
 See [here](src/main/resources/config.yml).
 
+### Building
+After *checkout/clone* do
+`git submodule update --init --recursive` once, than `./gradlew clean build`.
+
 ---
 
 ![](https://bstats.org/signatures/bukkit/RainManNG.svg)
