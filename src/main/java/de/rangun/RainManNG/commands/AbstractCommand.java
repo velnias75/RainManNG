@@ -28,6 +28,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 
+import com.google.common.collect.ImmutableList;
+
 import de.rangun.RainManNG.RainManNGPlugin;
 
 abstract class AbstractCommand implements CommandExecutor, TabCompleter {
@@ -54,10 +56,10 @@ abstract class AbstractCommand implements CommandExecutor, TabCompleter {
 				}
 			}
 
-			return sugg;
+			return ImmutableList.copyOf(sugg);
 		}
 
-		return args.length >= 2 ? new ArrayList<>() : cmd_args;
+		return args.length >= 2 ? ImmutableList.of() : cmd_args;
 	}
 
 }

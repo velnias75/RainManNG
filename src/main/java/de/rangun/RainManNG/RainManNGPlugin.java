@@ -47,7 +47,6 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 	private final PluginClient spigetClient = new PluginClient(102026, getDescription().getVersion(),
 			getDescription().getName(), getLogger());
 
-	// config values
 	private double rainChance;
 	private double lengthScale;
 	private boolean weatherEnabled;

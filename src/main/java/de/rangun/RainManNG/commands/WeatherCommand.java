@@ -19,25 +19,18 @@
 
 package de.rangun.RainManNG.commands;
 
-import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+
+import com.google.common.collect.ImmutableList;
 
 import de.rangun.RainManNG.RainManNGPlugin;
 
 public final class WeatherCommand extends AbstractCommand {
 
-	@SuppressWarnings("serial")
 	public WeatherCommand(final RainManNGPlugin plugin) {
-		super(plugin, new ArrayList<String>() {
-			{
-				add("clear");
-				add("rain");
-				add("thunder");
-			}
-		});
+		super(plugin, ImmutableList.of("clear", "rain", "thunder"));
 	}
 
 	@Override

@@ -19,8 +19,9 @@
 
 package de.rangun.RainManNG.commands.subcommands;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 import de.rangun.RainManNG.RainManNGPlugin;
 
@@ -30,19 +31,8 @@ import de.rangun.RainManNG.RainManNGPlugin;
  */
 public final class RainManNGSubcommandFactory {
 
-	@SuppressWarnings("serial")
-	private final static List<String> SUBCOMMANDS = new ArrayList<String>() {
-		{
-			add("disable-weather");
-			add("offline-weather");
-			add("reload");
-			add("save");
-			add("show-config");
-			add("rain-chance");
-			add("rain-length-scale");
-			add("get-weather");
-		}
-	};
+	private final static List<String> SUBCOMMANDS = ImmutableList.of("disable-weather", "offline-weather", "reload",
+			"save", "show-config", "rain-chance", "rain-length-scale", "get-weather");
 
 	private static RainManNGSubcommandFactory instance = null;
 

@@ -19,12 +19,13 @@
 
 package de.rangun.RainManNG.commands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+
+import com.google.common.collect.ImmutableList;
 
 import de.rangun.RainManNG.RainManNGPlugin;
 import de.rangun.RainManNG.commands.subcommands.RainManNGSubcommandFactory;
@@ -67,19 +68,13 @@ public final class RainManNGCommand extends AbstractCommand {
 		return b;
 	}
 
-	@SuppressWarnings("serial")
 	@Override
 	public List<String> onTabComplete(final CommandSender sender, final Command command, final String alias,
 			final String[] args) {
 
 		if (args.length >= 1 && args.length < 3 && isBooleanSubcommand(args)) {
 
-			return new ArrayList<String>() {
-				{
-					add("true");
-					add("false");
-				}
-			};
+			return ImmutableList.of("true", "false");
 
 		} else {
 			return super.onTabComplete(sender, command, alias, args);
