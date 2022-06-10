@@ -35,6 +35,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.rangun.RainManNG.commands.RainManNGCommand;
 import de.rangun.RainManNG.commands.WeatherCommand;
@@ -79,11 +80,18 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 			return "" + hasOfflineWeather();
 		}));
 
+		getServer().getPluginManager().registerEvents(new JoinListener(this, spigetClient), this);
+
 		getLogger().info("Enabled.");
 
-		spigetClient.checkVersion();
+		new BukkitRunnable() {
 
-		getServer().getPluginManager().registerEvents(new JoinListener(this), this);
+			@Override
+			public void run() {
+				spigetClient.checkVersion();
+			}
+
+		}.runTaskAsynchronously(this);
 	}
 
 	public void loadConfigValues() {
@@ -217,9 +225,5 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 		}
 
 		return tmpPluginDisabled || ow;
-	}
-
-	List<String> getJoinMessages() {
-		return spigetClient.getJoinMessages();
 	}
 }
