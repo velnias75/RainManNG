@@ -1,6 +1,6 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-version = '1.5'
+version = '1.6-SNAPSHOT'
 
 repositories {
 	mavenLocal()
