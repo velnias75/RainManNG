@@ -80,7 +80,7 @@ public final class RainManNGPlugin extends JavaPlugin implements Listener {
 			return "" + hasOfflineWeather();
 		}));
 
-		getServer().getPluginManager().registerEvents(new JoinListener(this, spigetClient), this);
+		getServer().getPluginManager().registerEvents(new JoinListener(spigetClient), this);
 
 		getLogger().info("Enabled.");
 

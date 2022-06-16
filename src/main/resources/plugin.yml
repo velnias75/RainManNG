@@ -1,7 +1,7 @@
 main: de.rangun.RainManNG.RainManNGPlugin
 name: RainManNG
 version: '@version@'
-description: Bukkit plugin for controlling rain frequency and length.
+description: Spigot plugin for controlling rain frequency and length.
 authors:
 - ABCRic
 - Velnias75
@@ -20,4 +20,4 @@ permissions:
   rainmanng.sendweatherreport:
       description: Displays whether raining was prevented or not to the user's client
       default: false
-api-version: '1.15'
+api-version: '1.13'

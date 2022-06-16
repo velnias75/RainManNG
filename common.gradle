@@ -20,13 +20,13 @@ java {
 
 dependencies {
 
-	compileOnly "org.bukkit:bukkit:${project.bukkit_version}"
+	compileOnly("org.spigotmc:spigot-api:${project.spigot_version}") {
+		exclude group:"org.hamcrest",  module:"hamcrest-core"
+		exclude group:"junit", module:"junit"
+	}
 	
 	compileOnly "com.google.code.findbugs:annotations:${project.findbugs_version}"
 	annotationProcessor "com.google.code.findbugs:annotations:${project.findbugs_version}"
-	
-	testImplementation "org.bukkit:bukkit:${project.bukkit_version}"
-	testImplementation "junit:junit:${project.junit_version}"
 }
 
 processResources {
@@ -34,18 +34,4 @@ processResources {
 	duplicatesStrategy = 'include'
         filter ReplaceTokens, tokens: [version: version]
     }
-}
-
-test {
-    testLogging {
-      events "failed"
-
-      showExceptions true
-      exceptionFormat "full"
-      showCauses true
-      showStackTraces true
-
-      showStandardStreams = false
-    }
-}
-  
+} 

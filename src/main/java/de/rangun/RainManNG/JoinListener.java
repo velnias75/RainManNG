@@ -19,20 +19,18 @@
 
 package de.rangun.RainManNG;
 
-import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import de.rangun.spiget.MessageRetriever;
+import net.md_5.bungee.api.ChatColor;
 
 final class JoinListener implements Listener {
 
-	private final RainManNGPlugin plugin;
 	private final MessageRetriever msgs;
 
-	public JoinListener(final RainManNGPlugin plugin, final MessageRetriever msgs) {
-		this.plugin = plugin;
+	public JoinListener(final MessageRetriever msgs) {
 		this.msgs = msgs;
 	}
 
@@ -41,10 +39,9 @@ final class JoinListener implements Listener {
 
 		if (event.getPlayer().hasPermission("rainmanng.admin")) {
 
-			for (String jm : msgs.getJoinMessages()) {
-				event.getPlayer().sendMessage("" + ChatColor.YELLOW + ChatColor.ITALIC + "["
-						+ plugin.getDescription().getName() + ": " + jm + "]");
-			}
+			msgs.sendJoinComponents((msg) -> {
+				event.getPlayer().spigot().sendMessage(msg);
+			}, ChatColor.YELLOW);
 		}
 	}
 }
